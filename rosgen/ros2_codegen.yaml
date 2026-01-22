@@ -1,0 +1,53 @@
+output_dir: ./generated
+build_type: ament_python
+
+build_dependencies:
+  - rclpy
+
+exec_dependencies:
+  - rclpy
+  - std_msgs
+
+package:
+  name: demo_pkg
+  version: 0.1.0
+  description: Demo ROS 2 package
+  license: Apache-2.0
+  maintainers:
+    - name: Anirudh
+      email: anirudh@example.com
+
+interfaces:
+  messages:
+    - name: MyMsg
+      fields:
+        - string data
+    - name: AnirudhMsg
+      fields:
+        - float data    
+  services:
+    - name: MySrv
+      request:
+        - int32 a
+      response:
+        - int32 sum
+
+nodes:
+  - name: demo_node
+    executable: demo_node
+    publishers:
+      - topic: /chatter
+        msg_type: std_msgs.msg.String
+    subscribers:
+      - topic: /chatter
+        msg_type: std_msgs.msg.String
+        callback: on_msg
+  - name: Anirudh_node
+    executable: Anirudh_node
+    publishers:
+      - topic: /idk
+        msg_type: AnirudhMsg
+    subscribers:
+      - topic: /chatter
+        msg_type: std_msgs.msg.String
+        callback: on_msg      

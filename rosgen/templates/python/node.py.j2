@@ -1,0 +1,35 @@
+import rclpy
+from rclpy.node import Node
+
+
+class {{ node.name | replace('-', '_') | capitalize }}(Node):
+    def __init__(self):
+        super().__init__("{{ node.name }}")
+
+        {% for pub in node.publishers %}
+        self.{{ pub.topic | replace('/', '_')| trim('_') }}_pub = self.create_publisher(
+            {{ pub.msg_type }}, "{{ pub.topic }}", {{ pub.qos }}
+        )
+        {% endfor %}
+
+        {% for sub in node.subscribers %}
+        self.create_subscription(
+            {{ sub.msg_type }},
+            "{{ sub.topic }}",
+            self.{{ sub.callback or 'callback' }},
+            {{ sub.qos }},
+        )
+        {% endfor %}
+
+    {% for sub in node.subscribers %}
+    def {{ sub.callback or 'callback' }}(self, msg):
+        self.get_logger().info(f"Received on {{ sub.topic }}: {msg}")
+    {% endfor %}
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = {{ node.name | replace('-', '_') | capitalize }}()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()

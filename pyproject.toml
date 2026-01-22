@@ -1,0 +1,14 @@
+[project]
+name = "rosgen"
+version = "0.1.0"
+dependencies = [
+  "click",
+  "pyyaml",
+  "pydantic",
+  "jinja2",
+]
+
+[project.scripts]
+rosgen = "rosgen.cli:main"
+[tool.setuptools]
+include-package-data = true

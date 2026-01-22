@@ -1,0 +1,2 @@
+[console_scripts]
+rosgen = rosgen.cli:main

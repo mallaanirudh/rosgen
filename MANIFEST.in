@@ -1,0 +1,1 @@
+recursive-include rosgen/templates *.j2

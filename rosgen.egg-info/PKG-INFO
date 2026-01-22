@@ -1,0 +1,7 @@
+Metadata-Version: 2.4
+Name: rosgen
+Version: 0.1.0
+Requires-Dist: click
+Requires-Dist: pyyaml
+Requires-Dist: pydantic
+Requires-Dist: jinja2
