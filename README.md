@@ -1,7 +1,7 @@
 # ROSGen
 
 **ROSGen** is a code generation tool for ROS 2 that creates boilerplate ROS 2 packages from a YAML specification. It simplifies package setup, message/service definition, and node scaffolding so you can focus on development instead of boilerplate.
-
+** There is a yaml file for reference you can refere **
 ---
 
 ## Features
@@ -20,4 +20,5 @@ Clone the repository and install dependencies:
 ```bash
 git clone <repo_url>
 cd rosgen
-pip install -r requirements.txt
+pip install -e .
+rosgen generate
