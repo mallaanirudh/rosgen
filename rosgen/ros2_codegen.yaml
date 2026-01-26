@@ -9,7 +9,9 @@ packages:
       - rclpy
       - std_msgs
       - robot_interface
-
+    maintainers:
+      - name: Anirudh
+        email: anirudh@example.com
     nodes:
       - name: demo_node
         executable: demo_node
@@ -37,7 +39,9 @@ packages:
       - rosidl_default_generators
     exec_dependencies:
       - rosidl_default_runtime
-
+    maintainers:
+      - name: Anirudh
+        email: anirudh@example.com
     interfaces:
       messages:
         - name: MyMsg
