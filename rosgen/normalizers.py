@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from rosgen.schema import Config, Maintainer
+from rosgen.schema import PackageConfig, Maintainer
 from rosgen.utils import snake_case
 
 
@@ -81,17 +81,21 @@ class NormalizedPackage:
 # Public Normalizers
 # ----------------------------
 
-def normalize_package(cfg: Config) -> NormalizedPackage:
-    # Interfaces
-    messages = [
-        NormalizedMsg(name=m.name, fields=m.fields)
-        for m in cfg.interfaces.messages
-    ]
+def normalize_package(pkg_cfg: PackageConfig, output_dir: str) -> NormalizedPackage:
+    # Interfaces (may be None)
+    if pkg_cfg.interfaces:
+        messages = [
+            NormalizedMsg(name=m.name, fields=m.fields)
+            for m in pkg_cfg.interfaces.messages
+        ]
 
-    services = [
-        NormalizedSrv(name=s.name, request=s.request, response=s.response)
-        for s in cfg.interfaces.services
-    ]
+        services = [
+            NormalizedSrv(name=s.name, request=s.request, response=s.response)
+            for s in pkg_cfg.interfaces.services
+        ]
+    else:
+        messages = []
+        services = []
 
     interfaces = NormalizedInterfaces(
         messages=messages,
@@ -100,7 +104,7 @@ def normalize_package(cfg: Config) -> NormalizedPackage:
 
     # Nodes
     nodes: List[NormalizedNode] = []
-    for n in cfg.nodes:
+    for n in pkg_cfg.nodes:
         pubs = [
             NormalizedPublisher(topic=p.topic, msg_type=p.msg_type, qos=p.qos)
             for p in n.publishers
@@ -127,19 +131,19 @@ def normalize_package(cfg: Config) -> NormalizedPackage:
     # Maintainers
     maintainers = [
         NormalizedMaintainer(name=m.name, email=m.email)
-        for m in cfg.package.maintainers
+        for m in pkg_cfg.maintainers
     ]
 
     return NormalizedPackage(
-        package_name=snake_case(cfg.package.name),
-        version=cfg.package.version,
-        description=cfg.package.description,
-        license=cfg.package.license,
+        package_name=snake_case(pkg_cfg.name),
+        version=pkg_cfg.version,
+        description=pkg_cfg.description,
+        license=pkg_cfg.license,
 
-        output_dir=cfg.output_dir,
-        build_type=cfg.build_type,
-        build_dependencies=cfg.build_dependencies,
-        exec_dependencies=cfg.exec_dependencies,
+        output_dir=output_dir,
+        build_type=pkg_cfg.build_type,
+        build_dependencies=pkg_cfg.build_dependencies,
+        exec_dependencies=pkg_cfg.exec_dependencies,
         maintainers=maintainers,
 
         interfaces=interfaces,

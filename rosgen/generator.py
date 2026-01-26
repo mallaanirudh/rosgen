@@ -18,20 +18,22 @@ env = Environment(
 
 print("TEMPLATES_DIR =", TEMPLATE_DIR)
 print("Templates found:", list(TEMPLATE_DIR.rglob("*.j2")))
-def generate_package(cfg: Config) -> None:
-    pkg = normalizers.normalize_package(cfg)
+def generate_packages(cfg: Config) -> None:
+    for pkg_cfg in cfg.packages:
+        pkg = normalizers.normalize_package(pkg_cfg, cfg.output_dir)
 
-    # CORRECT ROOT
-    root = Path(pkg.output_dir) / pkg.package_name
-    ensure_dir(root)
+        root = Path(cfg.output_dir) / pkg.package_name
+        ensure_dir(root)
 
-    _gen_package_xml(pkg, root)
-    _gen_cmake(pkg, root)
+        _gen_package_xml(pkg, root)
+        _gen_cmake(pkg, root)
 
-    if pkg.build_type == "ament_python":
-        _gen_python(pkg, root)
+        if pkg.build_type == "ament_python":
+            _gen_python(pkg, root)
 
-    _gen_interfaces(pkg, root)
+        if pkg.interfaces:
+            _gen_interfaces(pkg, root)
+
 
 
 def _gen_package_xml(pkg, root: Path) -> None:

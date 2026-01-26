@@ -55,12 +55,20 @@ class Maintainer(BaseModel):
     email: Optional[str] = None
 
 
-class Package(BaseModel):
+class PackageConfig(BaseModel):
     name: str
     version: str = "0.0.0"
     description: Optional[str] = None
     license: str = "Apache-2.0"
     maintainers: List[Maintainer] = []
+
+    build_type: Literal["ament_python", "ament_cmake"] = "ament_python"
+
+    build_dependencies: List[str] = []
+    exec_dependencies: List[str] = []
+
+    interfaces: Optional[Interfaces] = None
+    nodes: List[Node] = []
 
 
 # ----------------------------
@@ -68,17 +76,6 @@ class Package(BaseModel):
 # ----------------------------
 
 class Config(BaseModel):
-    # Where to generate package
     output_dir: str = "."
+    packages: List[PackageConfig]
 
-    # Build system
-    build_type: Literal["ament_python", "ament_cmake"] = "ament_python"
-
-    # Dependencies
-    build_dependencies: List[str] = []
-    exec_dependencies: List[str] = []
-
-    # Package + ROS stuff
-    package: Package
-    interfaces: Interfaces = Interfaces()
-    nodes: List[Node] = []
